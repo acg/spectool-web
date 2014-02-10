@@ -3,6 +3,7 @@ $(document).ready( function() {
 
   var $dropdown = $( 'select[name="logfile"]' );
   var $viewer = $( '#spectrum-viewer' );
+  var $frequency_bands = $( '#frequency-axis ul li' );
 
   $dropdown.change( function() {
     var filename = $(this).val();
@@ -11,6 +12,8 @@ $(document).ready( function() {
       url: filename,
       success: function(rsp) {
         $dropdown.attr('disabled','disabled');
+        $viewer.html('');
+        $frequency_bands.removeClass('on');
         render_spectrum_view( rsp );
         $dropdown.removeAttr('disabled');
       }
@@ -34,19 +37,21 @@ $(document).ready( function() {
     },
   });
 
-  $('#frequency-axis ul li').hover(
+  $frequency_bands.hover(
     function() {
+      if ($(this).hasClass('on'))
+        return;
       var vw = $viewer.width();
-      var vh = $viewer.height();
+      var vh = $( 'canvas', $viewer ).height();
       var df = $(this).outerWidth();
       var f_left = $(this).position().left;
       var f_right = Math.min( f_left + df, vw - 1);
-      var $highlight = $('<div class="highlight"></div>');
+      var $highlight = $('<div id="highlight-'+f_left+'" class="highlight"></div>');
       $highlight.css({
         width: df + 'px',
         height: vh + 'px',
         position: 'absolute',
-        top: $viewer.scrollTop(),
+        top: 0,
         left: f_left,
         background: 'white',
         opacity: 0.25
@@ -54,9 +59,16 @@ $(document).ready( function() {
       $viewer.append( $highlight );
     },
     function() {
-      $( '.highlight', $viewer ).remove();
+      var f_left = $(this).position().left;
+      if (!$(this).hasClass('on'))
+        $( '#highlight-'+f_left, $viewer ).remove();
     }
   );
+
+  $frequency_bands.click( function() {
+    $(this).closest('li').toggleClass('on');
+    return false;
+  } );
 
 } );
 
@@ -107,7 +119,6 @@ function render_spectrum_view( spectool_raw_lines )
 
   ctx.putImageData( img, 0, 0 );
 
-  $('#spectrum-viewer canvas').remove();
   $('#spectrum-viewer').append( $canvas );
 }
 

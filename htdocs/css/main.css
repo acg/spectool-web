@@ -43,6 +43,15 @@ body.spectool-web {
   text-align: center;
 }
 
+.spectool-web #frequency-axis ul li a {
+  text-decoration: none;
+}
+
+.spectool-web #frequency-axis ul li.on,
+.spectool-web #frequency-axis ul li:hover {
+  background: #ddd;
+}
+
 .spectool-web #frequency-axis ul li:first-child {
   text-align: left;
   padding-left: 6px;
