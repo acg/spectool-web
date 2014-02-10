@@ -46,7 +46,7 @@ $(document).ready( function() {
         width: df + 'px',
         height: vh + 'px',
         position: 'absolute',
-        top: 0,
+        top: $viewer.scrollTop(),
         left: f_left,
         background: 'white',
         opacity: 0.25
