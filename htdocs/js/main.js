@@ -24,9 +24,10 @@ function doit( spectool_log )
     data.push( [ t, samples ] );
   } );
 
-  var sx = 4;
+  var sx = 8;
+  var sy = 2;
   var cx = data[0][1].length * sx;
-  var cy = data.length;
+  var cy = data.length * sy;
 
   var $canvas = $( '<canvas width="'+cx+'" height="'+cy+'"></canvas>' );
   var ctx = $canvas[0].getContext("2d");
@@ -37,23 +38,25 @@ function doit( spectool_log )
   var z_max = -50;
 
   _.each( data, function(point,y) {
-    _.each( point[1], function(z,x) {
-      if (z < z_min) z = z_min;
-      else if (z >= z_max) z = z_max-1;
-      var z_norm = (z - z_min) / (z_max - z_min);
-      var rgb = colors[ Math.floor(z_norm*(colors.length-1)) ];
-      for (i=0; i<sx; i++) {
-        img.data[p++] = rgb[0];
-        img.data[p++] = rgb[1];
-        img.data[p++] = rgb[2];
-        img.data[p++] = 255;
-      }
+    _.each( _.range(sy), function() {
+      _.each( point[1], function(z,x) {
+        if (z < z_min) z = z_min;
+        else if (z >= z_max) z = z_max-1;
+        var z_norm = (z - z_min) / (z_max - z_min);
+        var rgb = colors[ Math.floor(z_norm*(colors.length-1)) ];
+        _.each( _.range(sx), function() {
+          img.data[p++] = rgb[0];
+          img.data[p++] = rgb[1];
+          img.data[p++] = rgb[2];
+          img.data[p++] = 255;
+        } );
+      } );
     } );
   } );
 
   ctx.putImageData( img, 0, 0 );
 
-  $('#spectool').append( $canvas );
+  $('#spectrum-viewer').append( $canvas );
 }
 
 
