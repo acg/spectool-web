@@ -28,7 +28,7 @@ body.spectool-web {
 .spectool-web #spectrum-viewer canvas {
   position: absolute;
   top: 0;
-  right: 0;
+  left: 0;
 }
 
 .spectool-web #frequency-axis ul {
