@@ -34,7 +34,7 @@ $(document).ready( function() {
     },
   });
 
-  $('#frequency-axis .channels > *, #frequency-axis .gigahertz > *').hover(
+  $('#frequency-axis ul li').hover(
     function() {
       var vw = $viewer.width();
       var vh = $viewer.height();
