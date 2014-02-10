@@ -12,10 +12,14 @@ $(document).ready( function() {
       url: filename,
       success: function(rsp) {
         $dropdown.attr('disabled','disabled');
+        $viewer.addClass('loading');
         $viewer.html('');
         $frequency_bands.removeClass('active');
-        render_spectrum_view( rsp );
-        $dropdown.removeAttr('disabled');
+        setTimeout( function() {
+          render_spectrum_view( rsp );
+          $viewer.removeClass('loading');
+          $dropdown.removeAttr('disabled');
+        }, 100 );
       }
     });
   } );

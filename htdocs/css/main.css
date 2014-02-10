@@ -14,6 +14,7 @@ body.spectool-web {
 .spectool-web #spectrum-viewer {
   height: 700px;
   overflow-y: auto;
+  background-color: #ddd;
 }
 
 .spectool-web form {
@@ -23,6 +24,12 @@ body.spectool-web {
 
 .spectool-web form label[for="logfile"] {
   text-align: left;
+}
+
+.spectool-web #spectrum-viewer.loading {
+  background-position: center center;
+  background-image: url(../img/ajax-loader.gif);
+  background-repeat: no-repeat;
 }
 
 .spectool-web #spectrum-viewer canvas {
