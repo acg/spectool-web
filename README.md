@@ -1,6 +1,6 @@
-# A web viewer for spectrum analyzer data #
+# A web viewer for RF spectrum data #
 
-** Weekend afternoon project. Work in progress! **
+*Afternoon project. Work in progress! Big fat warning.*
 
 This project complements [https://www.kismetwireless.net/spectools/](Spectrum Tools) with a web viewer for historical spectrum data captured by `spectool_raw`.
 
