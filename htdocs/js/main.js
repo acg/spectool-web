@@ -13,7 +13,7 @@ $(document).ready( function() {
       success: function(rsp) {
         $dropdown.attr('disabled','disabled');
         $viewer.html('');
-        $frequency_bands.removeClass('on');
+        $frequency_bands.removeClass('active');
         render_spectrum_view( rsp );
         $dropdown.removeAttr('disabled');
       }
@@ -39,7 +39,7 @@ $(document).ready( function() {
 
   $frequency_bands.hover(
     function() {
-      if ($(this).hasClass('on'))
+      if ($(this).hasClass('active'))
         return;
       var vw = $viewer.width();
       var vh = $( 'canvas', $viewer ).height();
@@ -60,13 +60,13 @@ $(document).ready( function() {
     },
     function() {
       var f_left = $(this).position().left;
-      if (!$(this).hasClass('on'))
+      if (!$(this).hasClass('active'))
         $( '#highlight-'+f_left, $viewer ).remove();
     }
   );
 
   $frequency_bands.click( function() {
-    $(this).closest('li').toggleClass('on');
+    $(this).closest('li').toggleClass('active');
     return false;
   } );
 
