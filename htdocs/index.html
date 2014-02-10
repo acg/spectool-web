@@ -52,7 +52,18 @@
 <div class="container">
   <div id="main">
 
-    <h1>&nbsp;</h1>
+    <form class="form-horizontal" role="form">
+
+      <div class="form-group">
+        <label for="logfile" class="control-label col-lg-4">Choose a log file:</label>
+        <div class="col-lg-4">
+          <select name="logfile" class="form-control" disabled="disabled">
+            <option value="" disabled="disabled">Run 'make' to re-populate this.</option>
+          </select>
+        </div>
+      </div>
+
+    </form>
 
     <div id="spectrum-viewer"></div>
 

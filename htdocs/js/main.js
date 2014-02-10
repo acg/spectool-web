@@ -1,27 +1,53 @@
 
 $(document).ready( function() {
 
+  var $dropdown = $( 'select[name="logfile"]' );
+
+  $dropdown.change( function() {
+    var filename = $(this).val();
+    if (!filename) return;
+    $.ajax({
+      url: filename,
+      success: function(rsp) {
+        $dropdown.attr('disabled','disabled');
+        render_spectrum_view( rsp );
+        $dropdown.removeAttr('disabled');
+      }
+    });
+  } );
+
   $.ajax({
-    url: 'data/example/wispy.01.txt',
+    url: 'data/list.txt',
     type: 'GET',
     success: function( rsp, textstatus, xhr ) {
-      doit( rsp );
+      var logfiles = rsp.trim().split("\n");
+      $( 'option[value!=""]', $dropdown ).remove();
+      _.each( logfiles, function(filename) {
+        $dropdown.append( $('<option value="'+filename+'">'+filename+'</option>') );
+      } );
+      if (logfiles.length >= 1) {
+        $dropdown.val(logfiles[0]);
+        $dropdown.trigger('change');
+      }
+      $dropdown.removeAttr('disabled');
     },
   });
 
 } );
 
 
-function doit( spectool_log )
+function render_spectrum_view( spectool_raw_lines )
 {
   var data = [];
 
-  _.each( spectool_log.split("\n"), function(line,linenum) {
+  _.each( spectool_raw_lines.split("\n"), function(line,linenum) {
     var fields = line.split(": ");
     if (fields.length != 2) return;
     var t = linenum; // TODO try to parse a timestamp out of fields[0]
-    var samples = _.map( fields[1].trim().split(" "), function(x) { return parseInt(x) } );
-    data.push( [ t, samples ] );
+    var Z = fields[1].trim().split(" ");
+    if (Z.length < 83) return;
+    var samples = _.map( Z, function(x) { return parseInt(x) } );
+    data.unshift( [ t, samples ] );
   } );
 
   var sx = 8;

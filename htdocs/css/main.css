@@ -17,3 +17,7 @@ body.spectool-web {
   right: 0;
 }
 
+.spectool-web form {
+  margin: 25px 0;
+}
+
