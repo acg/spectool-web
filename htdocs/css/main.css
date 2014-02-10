@@ -6,7 +6,7 @@ body.spectool-web {
   position: relative;
   width: 664px;
   height: 700px;
-  overflow-y: scroll;
+  overflow-y: auto;
   margin-left: auto;
   margin-right: auto;
 }
