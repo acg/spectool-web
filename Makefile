@@ -1,8 +1,8 @@
 
-all : unpack-data
+all : unpack-examples
 
-unpack-data : htdocs/data/wispy.01.txt
+unpack-examples: htdocs/data/example/wispy.01.txt
 
-htdocs/data/wispy.01.txt : htdocs/data/wispy.01.txt.gz
+htdocs/data/example/wispy.01.txt : htdocs/data/example/wispy.01.txt.gz
 	gunzip -c < $< > $@
 

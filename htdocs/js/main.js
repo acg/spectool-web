@@ -2,7 +2,7 @@
 $(document).ready( function() {
 
   $.ajax({
-    url: 'data/wispy.01.txt',
+    url: 'data/example/wispy.01.txt',
     type: 'GET',
     success: function( rsp, textstatus, xhr ) {
       doit( rsp );
