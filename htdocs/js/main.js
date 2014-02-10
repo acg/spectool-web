@@ -82,6 +82,7 @@ function render_spectrum_view( spectool_raw_lines )
 
   ctx.putImageData( img, 0, 0 );
 
+  $('#spectrum-viewer canvas').remove();
   $('#spectrum-viewer').append( $canvas );
 }
 
