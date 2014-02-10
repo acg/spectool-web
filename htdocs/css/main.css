@@ -2,9 +2,11 @@ body.spectool-web {
   padding-top: 50px;
 }
 
-.spectool-web #spectrum-viewer, .spectool-web form {
+.spectool-web #spectrum-viewer,
+.spectool-web form,
+.spectool-web #frequency-axis {
   position: relative;
-  width: 664px;
+  width: 679px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -27,12 +29,6 @@ body.spectool-web {
   position: absolute;
   top: 0;
   right: 0;
-}
-
-.spectool-web #frequency-axis {
-  width: 664px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .spectool-web #frequency-axis ul {

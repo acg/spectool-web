@@ -2,6 +2,7 @@
 $(document).ready( function() {
 
   var $dropdown = $( 'select[name="logfile"]' );
+  var $viewer = $( '#spectrum-viewer' );
 
   $dropdown.change( function() {
     var filename = $(this).val();
@@ -32,6 +33,30 @@ $(document).ready( function() {
       $dropdown.removeAttr('disabled');
     },
   });
+
+  $('#frequency-axis .channels > *, #frequency-axis .gigahertz > *').hover(
+    function() {
+      var vw = $viewer.width();
+      var vh = $viewer.height();
+      var df = $(this).outerWidth();
+      var f_left = $(this).position().left;
+      var f_right = Math.min( f_left + df, vw - 1);
+      var $highlight = $('<div class="highlight"></div>');
+      $highlight.css({
+        width: df + 'px',
+        height: vh + 'px',
+        position: 'absolute',
+        top: 0,
+        left: f_left,
+        background: 'white',
+        opacity: 0.25
+      });
+      $viewer.append( $highlight );
+    },
+    function() {
+      $( '.highlight', $viewer ).remove();
+    }
+  );
 
 } );
 
