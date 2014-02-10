@@ -10,11 +10,50 @@ body.spectool-web {
   margin-left: auto;
   margin-right: auto;
 }
-
 .spectool-web #spectrum-viewer canvas {
   position: absolute;
   top: 0;
   right: 0;
+}
+
+.spectool-web #frequency-axis {
+  width: 664px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.spectool-web #frequency-axis ul {
+  margin-bottom: 0;
+}
+
+.spectool-web #frequency-axis ul li {
+  float: left;
+  width: 38.1609px;
+  -box-sizing: border-box;
+  border-left: 1px solid black;
+  text-align: center;
+  font-size: 80%;
+}
+
+.spectool-web #frequency-axis ul li:first-child {
+  text-align: left;
+  padding-left: 6px;
+}
+
+.spectool-web #frequency-axis ul li.clear {
+  width: 1px;
+  clear: both;
+  float: none;
+}
+
+.spectool-web #frequency-axis ul.channels li {
+  font-weight: 700;
+  font-size: 110%;
+}
+
+.spectool-web #frequency-axis ul li:nth-child(16) {
+  width: 91.5862px;
+  border-right: 1px solid black;
 }
 
 .spectool-web form {
