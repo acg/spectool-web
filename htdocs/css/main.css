@@ -2,14 +2,27 @@ body.spectool-web {
   padding-top: 50px;
 }
 
-.spectool-web #spectrum-viewer {
+.spectool-web #spectrum-viewer, .spectool-web form {
   position: relative;
   width: 664px;
-  height: 700px;
-  overflow-y: auto;
   margin-left: auto;
   margin-right: auto;
 }
+
+.spectool-web #spectrum-viewer {
+  height: 700px;
+  overflow-y: auto;
+}
+
+.spectool-web form {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+.spectool-web form label[for="logfile"] {
+  text-align: left;
+}
+
 .spectool-web #spectrum-viewer canvas {
   position: absolute;
   top: 0;
@@ -56,7 +69,4 @@ body.spectool-web {
   border-right: 1px solid black;
 }
 
-.spectool-web form {
-  margin: 25px 0;
-}
 
