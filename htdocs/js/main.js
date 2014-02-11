@@ -48,7 +48,7 @@ $(document).ready( function() {
       var vw = $viewer.width();
       var vh = $( 'canvas', $viewer ).height();
       var df = $(this).outerWidth();
-      var f_left = $(this).position().left;
+      var f_left = $(this).position().left + $('canvas',$viewer).position().left;
       var f_right = Math.min( f_left + df, vw - 1);
       var $highlight = $('<div id="highlight-'+f_left+'" class="highlight"></div>');
       $highlight.css({
@@ -63,7 +63,7 @@ $(document).ready( function() {
       $viewer.append( $highlight );
     },
     function() {
-      var f_left = $(this).position().left;
+      var f_left = $(this).position().left + $('canvas',$viewer).position().left;
       if (!$(this).hasClass('active'))
         $( '#highlight-'+f_left, $viewer ).remove();
     }
