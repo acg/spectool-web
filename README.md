@@ -23,7 +23,7 @@ To import your `spectool_raw` log files, copy or symlink them into htdocs/data/,
 
 ## Screenshot ##
 
-![Spectool Web Viewer](./htdocs/img/spectool-web-screenshot-2014.02.10.png)
+![Spectool Web Viewer](./htdocs/img/spectool-web-screenshot-2014.02.11.png)
 
 ## Author ##
 
