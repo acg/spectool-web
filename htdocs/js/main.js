@@ -163,8 +163,9 @@ function render_spectrum_view( spectool_raw_lines )
 
 function parse_tai64n( stamp )
 {
-  var secs = parseInt( stamp.substr(2,14), 16 ); // FIXME this appears to lose about 10s of accuracy
-  var nanosecs = parseInt( stamp.substr(16), 16 ) * 4.294967296;
+  var LEAP_SECONDS = 10;
+  var secs = parseInt( stamp.substr(2,14), 16 ) - LEAP_SECONDS;
+  var nanosecs = parseInt( stamp.substr(16), 16 );
   return secs + nanosecs / 1e9;
 }
 
