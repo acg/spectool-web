@@ -80,15 +80,36 @@ $(document).ready( function() {
 function render_spectrum_view( spectool_raw_lines )
 {
   var data = [];
+  var z_min = -100;
+  var z_max = -50;
 
   _.each( spectool_raw_lines.split("\n"), function(line,linenum) {
+
     var fields = line.split(": ");
-    if (fields.length != 2) return;
-    var t = linenum; // TODO try to parse a timestamp out of fields[0]
+
+    if (fields.length != 2)
+      return;
+
     var Z = fields[1].trim().split(" ");
-    if (Z.length < 83) return;
-    var samples = _.map( Z, function(x) { return parseInt(x) } );
+
+    if (Z.length < 83)
+      return;
+
+    var t = linenum;
+
+    if (fields[0].charAt(0) == '@')
+      t = parse_tai64n( fields[0].split(" ")[0].substr(1) );
+
+    var samples = _.map( Z, function(z) {
+      z = parseInt(z);
+      if (z < z_min) z = z_min;
+      else if (z >= z_max) z = z_max-1;
+      var z_norm = (z - z_min) / (z_max - z_min);
+      return z_norm;
+    } );
+
     data.unshift( [ t, samples ] );
+
   } );
 
   var sx = 8;
@@ -101,16 +122,11 @@ function render_spectrum_view( spectool_raw_lines )
   var img = ctx.getImageData( 0, 0, cx, cy );
   var colors = palette();
   var p = 0;
-  var z_min = -100;
-  var z_max = -50;
 
   _.each( data, function(point,y) {
     _.each( _.range(sy), function() {
       _.each( point[1], function(z,x) {
-        if (z < z_min) z = z_min;
-        else if (z >= z_max) z = z_max-1;
-        var z_norm = (z - z_min) / (z_max - z_min);
-        var rgb = colors[ Math.floor(z_norm*(colors.length-1)) ];
+        var rgb = colors[ Math.floor( z * (colors.length-1)) ];
         _.each( _.range(sx), function() {
           img.data[p++] = rgb[0];
           img.data[p++] = rgb[1];
@@ -124,6 +140,13 @@ function render_spectrum_view( spectool_raw_lines )
   ctx.putImageData( img, 0, 0 );
 
   $('#spectrum-viewer').append( $canvas );
+}
+
+function parse_tai64n( stamp )
+{
+  var secs = parseInt( stamp.substr(2,14), 16 ); // FIXME this appears to lose about 10s of accuracy
+  var nanosecs = parseInt( stamp.substr(16), 16 ) * 4.294967296;
+  return secs + nanosecs / 1e9;
 }
 
 
