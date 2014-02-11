@@ -44,7 +44,7 @@ body.spectool-web {
 
 .spectool-web #frequency-axis ul li {
   float: left;
-  width: 39px;
+  width: 38px;
   -box-sizing: border-box;
   text-align: center;
 }
@@ -93,7 +93,11 @@ body.spectool-web {
   font-size: 80%;
 }
 
-.spectool-web #frequency-axis ul li:nth-child(16) {
-  width: 79px;
+.spectool-web #frequency-axis ul li:first-child {
+  width: 85px;
+}
+
+.spectool-web #frequency-axis ul li:nth-child(15) {
+  width: 85px;
 }
 
