@@ -144,7 +144,7 @@ function render_spectrum_view( spectool_raw_lines )
 
   if (have_timestamps)
   {
-    var interval = 100;
+    var interval = 25;
     var tick_points = _.filter( data, function(point,y) { return (0 == y % interval) } );
     var ticks = _.map( tick_points, function(point,y) {
       var d = new Date( point[0] * 1000 );
@@ -152,7 +152,7 @@ function render_spectrum_view( spectool_raw_lines )
       return hh+":"+mm+":"+ss;
     } );
 
-    var tick_height = Math.floor( data.length * sy / ticks.length );
+    var tick_height = data.length * sy / ticks.length;
     var ticks_html = (_.map( ticks, function(t) { return '<li style="height:'+tick_height+'px">'+t+'</li>' } )).join("");
     var $time_axis = $( '<ul id="time-axis">'+ticks_html+'</ul>' );
 
