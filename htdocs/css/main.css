@@ -43,6 +43,7 @@ body.spectool-web {
   top: 0;
   left: 0;
   width: 61px;
+  margin-bottom: 0;
 }
 
 .spectool-web #frequency-axis {
