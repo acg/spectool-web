@@ -1,6 +1,13 @@
 all : unpack-examples list-logs
 
 
+WEB_SERVER_PORT ?= 9090
+
+serve :
+	@printf "Please visit http://127.0.0.1:%d/\n" "$(WEB_SERVER_PORT)"
+	@( cd htdocs ; python -m SimpleHTTPServer $(WEB_SERVER_PORT) )
+
+
 unpack-examples: htdocs/data/example/wispy.01.txt
 
 htdocs/data/example/wispy.01.txt : htdocs/data/example/wispy.01.txt.gz

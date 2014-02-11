@@ -12,9 +12,16 @@ Typical uses:
 
 The Spectool Web Viewer shows data captured by the [spectool_raw](http://manpages.ubuntu.com/manpages/hardy/man1/spectool_raw.1.html) program.
 
-## Screenshot ##
+## Usage ##
 
-Pretty basic so far:
+Short version:
+
+    make
+    make serve
+
+To import your `spectool_raw` log files, copy or symlink them into htdocs/data/, run make again, and refresh the page.
+
+## Screenshot ##
 
 ![Spectool Web Viewer](./htdocs/img/spectool-web-screenshot-2014.02.10.png)
 
