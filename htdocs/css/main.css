@@ -6,7 +6,7 @@ body.spectool-web {
 .spectool-web form,
 .spectool-web #frequency-axis {
   position: relative;
-  width: 679px;
+  width: 740px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -35,7 +35,18 @@ body.spectool-web {
 .spectool-web #spectrum-viewer canvas {
   position: absolute;
   top: 0;
+  left: 61px;
+}
+
+.spectool-web #spectrum-viewer #time-axis {
+  position: absolute;
+  top: 0;
   left: 0;
+  width: 61px;
+}
+
+.spectool-web #frequency-axis {
+  padding-left: 61px;
 }
 
 .spectool-web #frequency-axis ul {

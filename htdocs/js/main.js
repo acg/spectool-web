@@ -82,6 +82,7 @@ function render_spectrum_view( spectool_raw_lines )
   var data = [];
   var z_min = -100;
   var z_max = -50;
+  var have_timestamps = false;
 
   _.each( spectool_raw_lines.split("\n"), function(line,linenum) {
 
@@ -97,13 +98,13 @@ function render_spectrum_view( spectool_raw_lines )
 
     var t = linenum;
 
-    if (fields[0].charAt(0) == '@')
+    if (fields[0].charAt(0) == '@') {
       t = parse_tai64n( fields[0].split(" ")[0].substr(1) );
+      have_timestamps = true;
+    }
 
     var samples = _.map( Z, function(z) {
-      z = parseInt(z);
-      if (z < z_min) z = z_min;
-      else if (z >= z_max) z = z_max-1;
+      z = Math.min( z_max-1, Math.max( z_min, parseInt(z) ) );
       var z_norm = (z - z_min) / (z_max - z_min);
       return z_norm;
     } );
@@ -140,7 +141,25 @@ function render_spectrum_view( spectool_raw_lines )
   ctx.putImageData( img, 0, 0 );
 
   $('#spectrum-viewer').append( $canvas );
+
+  if (have_timestamps)
+  {
+    var interval = 100;
+    var tick_points = _.filter( data, function(point,y) { return (0 == y % interval) } );
+    var ticks = _.map( tick_points, function(point,y) {
+      var d = new Date( point[0] * 1000 );
+      var hh = d.getHours(), mm = d.getMinutes(), ss = d.getSeconds();
+      return hh+":"+mm+":"+ss;
+    } );
+
+    var tick_height = Math.floor( data.length * sy / ticks.length );
+    var ticks_html = (_.map( ticks, function(t) { return '<li style="height:'+tick_height+'px">'+t+'</li>' } )).join("");
+    var $time_axis = $( '<ul id="time-axis">'+ticks_html+'</ul>' );
+
+    $('#spectrum-viewer').append( $time_axis );
+  }
 }
+
 
 function parse_tai64n( stamp )
 {
