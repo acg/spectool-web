@@ -18,12 +18,15 @@ $(document).ready( function() {
       data = [];
       $viewer.html('');
 
+      var timer = setInterval( function() {
+        $viewer.html(''); render_spectrum_view( data ); 
+      }, 500 );
+
       var url = location.hostname + ':' + (parseInt(location.port) + 1);
       var ws = new WebSocket('ws://' + url + '/');
 
       ws.onmessage = function( msg ) {
-        $viewer.html('');
-        render_spectrum_view( msg.data );
+        import_spectrum_data( msg.data );
       };
 
       ws.onopen = function() {
@@ -35,6 +38,7 @@ $(document).ready( function() {
       };
 
       ws.onclose = function() {
+        clearInterval( timer );
         $( '.alert' )
           .addClass( 'alert-danger' )
           .removeClass( 'alert-success' )
@@ -53,7 +57,8 @@ $(document).ready( function() {
           $viewer.html('');
           $frequency_bands.removeClass('active');
           setTimeout( function() {
-            render_spectrum_view( rsp );
+            import_spectrum_data( rsp );
+            render_spectrum_view( data );
             $viewer.removeClass('loading');
             $dropdown.removeAttr('disabled');
           }, 100 );
@@ -101,11 +106,10 @@ $(document).ready( function() {
 } );
 
 
-function render_spectrum_view( spectool_raw_lines )
+function import_spectrum_data( spectool_raw_lines )
 {
   var z_min = -100;
   var z_max = -50;
-  var have_timestamps = false;
 
   _.each( spectool_raw_lines.split("\n"), function(line,linenum) {
 
@@ -121,10 +125,8 @@ function render_spectrum_view( spectool_raw_lines )
 
     var t = linenum;
 
-    if (fields[0].charAt(0) == '@') {
+    if (fields[0].charAt(0) == '@')
       t = parse_tai64n( fields[0].split(" ")[0].substr(1) );
-      have_timestamps = true;
-    }
 
     var samples = _.map( Z, function(z) {
       z = Math.min( z_max-1, Math.max( z_min, parseInt(z) ) );
@@ -135,7 +137,11 @@ function render_spectrum_view( spectool_raw_lines )
     data.unshift( [ t, samples ] );
 
   } );
+}
 
+
+function render_spectrum_view( data )
+{
   var sx = 8;
   var sy = 2;
   var cx = data[0][1].length * sx;
@@ -164,6 +170,9 @@ function render_spectrum_view( spectool_raw_lines )
   ctx.putImageData( img, 0, 0 );
 
   $('#spectrum-viewer').append( $canvas );
+
+  var epoch_1980 = 315558000;
+  var have_timestamps = (data[0][0] >= epoch_1980);
 
   if (have_timestamps)
   {
