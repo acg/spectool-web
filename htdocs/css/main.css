@@ -3,8 +3,7 @@ body.spectool-web {
 }
 
 .spectool-web #spectrum-viewer,
-.spectool-web #frequency-axis,
-.spectool-web .alert {
+.spectool-web #frequency-axis {
   position: relative;
   width: 740px;
   margin-left: auto;
@@ -13,9 +12,14 @@ body.spectool-web {
 
 .spectool-web .alert {
   position: absolute;
+  width: 664px;
   top: 60px;
   left: 50%;
-  margin-left: -370px;
+  margin-left: -309px;
+}
+
+.spectool-web .navbar .source-label {
+  margin-left: 61px;
 }
 
 .spectool-web #spectrum-viewer {
