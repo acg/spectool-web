@@ -96,7 +96,6 @@ $(document).ready( function() {
           $viewer.addClass('loading');
           data = [];
           clear_spectrum_view();
-          $frequency_bands.removeClass('active');
 
           $( '.alert' )
             .addClass( 'alert-info' )
