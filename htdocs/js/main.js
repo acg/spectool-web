@@ -1,4 +1,8 @@
 var data = [];
+var z_min = -100;
+var z_max = -50;
+var sx = 8;
+var sy = 2;
 
 
 $(document).ready( function() {
@@ -20,13 +24,14 @@ $(document).ready( function() {
 
       var timer = setInterval( function() {
         $viewer.html(''); render_spectrum_view( data ); 
-      }, 500 );
+      }, 1000 );
 
       var url = location.hostname + ':' + (parseInt(location.port) + 1);
       var ws = new WebSocket('ws://' + url + '/');
 
       ws.onmessage = function( msg ) {
         import_spectrum_data( msg.data );
+        data = data.slice( 0, $viewer.height() / sy );  // throw away oldest samples
       };
 
       ws.onopen = function() {
@@ -108,9 +113,6 @@ $(document).ready( function() {
 
 function import_spectrum_data( spectool_raw_lines )
 {
-  var z_min = -100;
-  var z_max = -50;
-
   _.each( spectool_raw_lines.split("\n"), function(line,linenum) {
 
     var fields = line.split(": ");
@@ -142,8 +144,6 @@ function import_spectrum_data( spectool_raw_lines )
 
 function render_spectrum_view( data )
 {
-  var sx = 8;
-  var sy = 2;
   var cx = data[0][1].length * sx;
   var cy = data.length * sy;
 
