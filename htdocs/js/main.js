@@ -7,7 +7,7 @@ var sy = 2;
 
 $(document).ready( function() {
 
-  var $dropdown = $( 'select[name="logfile"]' );
+  var $dropdown = $( 'select[name="source"]' );
   var $viewer = $( '#spectrum-viewer' );
   var $frequency_bands = $( '#frequency-axis ul li' );
 
