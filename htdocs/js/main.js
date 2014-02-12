@@ -1,3 +1,5 @@
+var data = [];
+
 
 $(document).ready( function() {
 
@@ -6,22 +8,59 @@ $(document).ready( function() {
   var $frequency_bands = $( '#frequency-axis ul li' );
 
   $dropdown.change( function() {
+
     var filename = $(this).val();
-    if (!filename) return;
-    $.ajax({
-      url: filename,
-      success: function(rsp) {
-        $dropdown.attr('disabled','disabled');
-        $viewer.addClass('loading');
+
+    if (!filename)
+      return;
+    else if (filename == 'ws://')
+    {
+      data = [];
+      $viewer.html('');
+
+      var url = location.hostname + ':' + (parseInt(location.port) + 1);
+      var ws = new WebSocket('ws://' + url + '/');
+
+      ws.onmessage = function( msg ) {
         $viewer.html('');
-        $frequency_bands.removeClass('active');
-        setTimeout( function() {
-          render_spectrum_view( rsp );
-          $viewer.removeClass('loading');
-          $dropdown.removeAttr('disabled');
-        }, 100 );
-      }
-    });
+        render_spectrum_view( msg.data );
+      };
+
+      ws.onopen = function() {
+        $( '.alert' )
+          .addClass( 'alert-success' )
+          .removeClass( 'alert-danger' )
+          .removeClass( 'alert-info' )
+          .html( 'connection opened.' );
+      };
+
+      ws.onclose = function() {
+        $( '.alert' )
+          .addClass( 'alert-danger' )
+          .removeClass( 'alert-success' )
+          .removeClass( 'alert-info' )
+          .html( 'connection closed.' );
+      };
+    }
+    else
+    {
+      $.ajax({
+        url: filename,
+        success: function(rsp) {
+          $dropdown.attr('disabled','disabled');
+          $viewer.addClass('loading');
+          data = [];
+          $viewer.html('');
+          $frequency_bands.removeClass('active');
+          setTimeout( function() {
+            render_spectrum_view( rsp );
+            $viewer.removeClass('loading');
+            $dropdown.removeAttr('disabled');
+          }, 100 );
+        }
+      });
+    }
+
   } );
 
   $frequency_bands.hover(
@@ -64,7 +103,6 @@ $(document).ready( function() {
 
 function render_spectrum_view( spectool_raw_lines )
 {
-  var data = [];
   var z_min = -100;
   var z_max = -50;
   var have_timestamps = false;

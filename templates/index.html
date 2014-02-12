@@ -54,6 +54,8 @@
 <div class="container">
   <div id="main">
 
+    <div class="alert col-lg-12"></div>
+
     <form class="form-horizontal" role="form">
 
       <div class="form-group">
@@ -62,6 +64,7 @@
           <select name="logfile" class="form-control" disabled="disabled">
             <option value="" disabled="disabled">Run 'make' to re-populate this.</option>
             %%LOGFILES_HTML%%
+            <option value="ws://">Live view</option>
           </select>
         </div>
       </div>
