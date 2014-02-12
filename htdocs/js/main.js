@@ -223,6 +223,8 @@ function render_spectrum_view( data )
 
   $('#spectrum-viewer').append( $canvas );
 
+  // Time Axis
+
   var epoch_1980 = 315558000;
   var have_timestamps = (data[0][0] >= epoch_1980);
   var ticks_html;
@@ -247,6 +249,11 @@ function render_spectrum_view( data )
 
   var $time_axis = $( sprintf('<ul id="time-axis">%s</ul>', ticks_html) );
   $('#spectrum-viewer').append( $time_axis );
+
+  // Adjust highlight sizes
+
+   var vh = Math.max( $('#spectrum-viewer').height(), $( '#spectrum-viewer canvas' ).height() );
+  $('#spectrum-viewer .highlight').css({ height: vh+'px' });
 }
 
 
