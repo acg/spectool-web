@@ -36,9 +36,7 @@ $(document).ready( function() {
         render_spectrum_view( data ); 
 
         $( '.alert' )
-          .addClass( 'alert-info' )
-          .removeClass( 'alert-danger' )
-          .removeClass( 'alert-success' )
+          .attr('class','').addClass('alert alert-info')
           .html( sprintf('Live view running: %d samples collected.', live_sample_count) );
 
       }, 1000 );
@@ -54,9 +52,7 @@ $(document).ready( function() {
 
       websocket.onopen = function() {
         $( '.alert' )
-          .addClass( 'alert-success' )
-          .removeClass( 'alert-danger' )
-          .removeClass( 'alert-info' )
+          .attr('class','').addClass('alert alert-success')
           .html( 'Live view connection opened.' );
       };
 
@@ -68,9 +64,7 @@ $(document).ready( function() {
         if (!ev.wasClean)
         {
           $( '.alert' )
-            .addClass( 'alert-danger' )
-            .removeClass( 'alert-success' )
-            .removeClass( 'alert-info' )
+            .attr('class','').addClass('alert alert-danger')
             .html( sprintf('Live view connection closed: %s (%d)', ev.reason, ev.code) );
         }
       };
@@ -83,9 +77,7 @@ $(document).ready( function() {
       }
 
       $( '.alert' )
-        .removeClass( 'alert-success' )
-        .removeClass( 'alert-danger' )
-        .removeClass( 'alert-info' )
+        .attr('class','').addClass('alert')
         .html('');
 
       $.ajax({
@@ -98,7 +90,7 @@ $(document).ready( function() {
           clear_spectrum_view();
 
           $( '.alert' )
-            .addClass( 'alert-info' )
+            .attr('class','').addClass('alert alert-info')
             .html( sprintf("Loading spectrum data from %s ...", filename) );
 
           setTimeout( function() {
@@ -109,8 +101,7 @@ $(document).ready( function() {
             $dropdown.removeAttr('disabled');
 
             $( '.alert' )
-              .removeClass( 'alert-info' )
-              .addClass( 'alert-success' )
+              .attr('class','').addClass('alert alert-success')
               .html( sprintf("Loaded %d spectrum samples.", data.length) );
 
           }, 100 );
