@@ -31,7 +31,7 @@ $(document).ready( function() {
       var logfiles = rsp.trim().split("\n");
       $( 'option[value!=""]', $dropdown ).remove();
       _.each( logfiles, function(filename) {
-        $dropdown.append( $('<option value="'+filename+'">'+filename+'</option>') );
+        $dropdown.append( $( sprintf('<option value="%s">%s</option>', filename, filename) ) );
       } );
       if (logfiles.length >= 1) {
         $dropdown.val(logfiles[0]);
@@ -50,7 +50,7 @@ $(document).ready( function() {
       var df = $(this).outerWidth();
       var f_left = $(this).position().left + $('canvas',$viewer).position().left;
       var f_right = Math.min( f_left + df, vw - 1);
-      var $highlight = $('<div id="highlight-'+f_left+'" class="highlight"></div>');
+      var $highlight = $( sprintf('<div id="highlight-%d" class="highlight"></div>', f_left) );
       $highlight.css({
         width: df + 'px',
         height: vh + 'px',
@@ -118,7 +118,7 @@ function render_spectrum_view( spectool_raw_lines )
   var cx = data[0][1].length * sx;
   var cy = data.length * sy;
 
-  var $canvas = $( '<canvas width="'+cx+'" height="'+cy+'"></canvas>' );
+  var $canvas = $( sprintf('<canvas width="%d" height="%d"></canvas>', cx, cy) );
   var ctx = $canvas[0].getContext("2d");
   var img = ctx.getImageData( 0, 0, cx, cy );
   var colors = palette();
@@ -152,10 +152,10 @@ function render_spectrum_view( spectool_raw_lines )
       var hh = d.getHours();
       var mm = d.getMinutes();
       var ss = d.getSeconds();
-      return sprintf( '<li style="height:%dpx">%02d:%02d:%02d</li>', tick_height, hh, mm, ss );
+      return sprintf('<li style="height:%dpx">%02d:%02d:%02d</li>', tick_height, hh, mm, ss);
     } )).join("");
 
-    var $time_axis = $( '<ul id="time-axis">'+ticks_html+'</ul>' );
+    var $time_axis = $( sprintf('<ul id="time-axis">%s</ul>', ticks_html) );
 
     $('#spectrum-viewer').append( $time_axis );
   }
