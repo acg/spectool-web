@@ -141,6 +141,9 @@ function import_spectrum_data( spectool_raw_lines )
 
 function render_spectrum_view( data )
 {
+  if (!data.length)
+    return;
+
   var cx = data[0][1].length * sx;
   var cy = data.length * sy;
 
