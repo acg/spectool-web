@@ -8,13 +8,16 @@ serve :
 	@( cd htdocs ; python -m SimpleHTTPServer $(WEB_SERVER_PORT) )
 
 
-unpack-examples: htdocs/data/example/wispy.01.txt
+EXAMPLES_GZ = $(shell find htdocs/data/example -name \*.gz | sort)
+EXAMPLES = $(EXAMPLES_GZ:%.gz=%)
 
-htdocs/data/example/wispy.01.txt : htdocs/data/example/wispy.01.txt.gz
+unpack-examples: $(EXAMPLES)
+
+htdocs/data/example/% : htdocs/data/example/%.gz
 	gunzip -c < $< > $@
 
 
-LOG_FILES = $(shell find -L htdocs/data -type f -a -not -name "*.gz" -a -not -name ".*" -a -not -name list.txt | sort)
+LOG_FILES = $(EXAMPLES) $(shell find -L htdocs/data -type f -a -not -path "htdocs/data/example/*" -a -not -name ".*" -a -not -name list.txt | sort)
 
 
 list-logs : htdocs/data/list.txt
