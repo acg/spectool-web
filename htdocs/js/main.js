@@ -3,6 +3,9 @@ var z_min = -100;
 var z_max = -50;
 var sx = 8;
 var sy = 2;
+var websocket_url = sprintf("ws://%s:%d/", location.hostname, (parseInt(location.port)+1));
+var websocket = null;
+var refresh_interval = null;
 
 
 $(document).ready( function() {
@@ -22,20 +25,19 @@ $(document).ready( function() {
       data = [];
       clear_spectrum_view();
 
-      var timer = setInterval( function() {
+      refresh_interval = setInterval( function() {
         clear_spectrum_view();
         render_spectrum_view( data ); 
       }, 1000 );
 
-      var url = location.hostname + ':' + (parseInt(location.port) + 1);
-      var ws = new WebSocket('ws://' + url + '/');
+      websocket = new WebSocket( websocket_url );
 
-      ws.onmessage = function( msg ) {
+      websocket.onmessage = function( msg ) {
         import_spectrum_data( msg.data );
         data = data.slice( 0, $viewer.height() / sy );  // throw away oldest samples
       };
 
-      ws.onopen = function() {
+      websocket.onopen = function() {
         $( '.alert' )
           .addClass( 'alert-success' )
           .removeClass( 'alert-danger' )
@@ -43,17 +45,28 @@ $(document).ready( function() {
           .html( 'connection opened.' );
       };
 
-      ws.onclose = function() {
-        clearInterval( timer );
-        $( '.alert' )
-          .addClass( 'alert-danger' )
-          .removeClass( 'alert-success' )
-          .removeClass( 'alert-info' )
-          .html( 'connection closed.' );
+      websocket.onclose = function(ev) {
+
+        clearInterval( refresh_interval );
+        refresh_interval = null;
+
+        if (!ev.wasClean)
+        {
+          $( '.alert' )
+            .addClass( 'alert-danger' )
+            .removeClass( 'alert-success' )
+            .removeClass( 'alert-info' )
+            .html( sprintf('connection closed: %s (%d)', ev.reason, ev.code) );
+        }
       };
     }
     else
     {
+      if (websocket) {
+        websocket.close();
+        websocket = null;
+      }
+
       $.ajax({
         url: filename,
         success: function(rsp) {
