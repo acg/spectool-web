@@ -14,7 +14,15 @@ body.spectool-web {
 .spectool-web #spectrum-viewer {
   height: 700px;
   overflow-y: auto;
-  background-color: #ddd;
+}
+
+.spectool-web #spectrum-viewer .background {
+  position: relative;
+  top: 0;
+  left: 61px;
+  width: 664px;
+  height: 100%;
+  background-color: #000044;
 }
 
 .spectool-web form {
@@ -45,6 +53,7 @@ body.spectool-web {
   width: 61px;
   margin-bottom: 0;
   font-size: 90%;
+  background-color: white;
 }
 
 .spectool-web #spectrum-viewer #time-axis li {
@@ -125,4 +134,11 @@ body.spectool-web {
   font-size: 80%;
 }
 
+.spectool-web #spectrum-viewer .highlight {
+  position: absolute;
+  top: 0;
+  background: white;
+  opacity: 0.25;
+  z-index: 1;
+}
 

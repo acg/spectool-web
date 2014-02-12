@@ -20,10 +20,11 @@ $(document).ready( function() {
     else if (filename == 'ws://')
     {
       data = [];
-      $viewer.html('');
+      clear_spectrum_view();
 
       var timer = setInterval( function() {
-        $viewer.html(''); render_spectrum_view( data ); 
+        clear_spectrum_view();
+        render_spectrum_view( data ); 
       }, 1000 );
 
       var url = location.hostname + ':' + (parseInt(location.port) + 1);
@@ -59,7 +60,7 @@ $(document).ready( function() {
           $dropdown.attr('disabled','disabled');
           $viewer.addClass('loading');
           data = [];
-          $viewer.html('');
+          clear_spectrum_view();
           $frequency_bands.removeClass('active');
           setTimeout( function() {
             import_spectrum_data( rsp );
@@ -78,7 +79,7 @@ $(document).ready( function() {
       if ($(this).hasClass('active'))
         return;
       var vw = $viewer.width();
-      var vh = $( 'canvas', $viewer ).height();
+      var vh = Math.max( $viewer.height(), $( 'canvas', $viewer ).height() );
       var df = $(this).outerWidth();
       var f_left = $(this).position().left + $('canvas',$viewer).position().left;
       var f_right = Math.min( f_left + df, vw - 1);
@@ -86,11 +87,7 @@ $(document).ready( function() {
       $highlight.css({
         width: df + 'px',
         height: vh + 'px',
-        position: 'absolute',
-        top: 0,
-        left: f_left,
-        background: 'white',
-        opacity: 0.25
+        left: f_left
       });
       $viewer.append( $highlight );
     },
@@ -173,13 +170,15 @@ function render_spectrum_view( data )
 
   var epoch_1980 = 315558000;
   var have_timestamps = (data[0][0] >= epoch_1980);
+  var ticks_html;
 
   if (have_timestamps)
   {
     var interval = 25;
     var tick_points = _.filter( data, function(point,y) { return (0 == y % interval) } );
     var tick_height = data.length * sy / tick_points.length;
-    var ticks_html = (_.map( tick_points, function(point) {
+
+    ticks_html = (_.map( tick_points, function(point) {
       var d = new Date( point[0] * 1000 );
       var hh = d.getHours();
       var mm = d.getMinutes();
@@ -187,10 +186,19 @@ function render_spectrum_view( data )
       return sprintf('<li style="height:%dpx">%02d:%02d:%02d</li>', tick_height, hh, mm, ss);
     } )).join("");
 
-    var $time_axis = $( sprintf('<ul id="time-axis">%s</ul>', ticks_html) );
-
-    $('#spectrum-viewer').append( $time_axis );
   }
+  else
+    ticks_html = '';
+
+  var $time_axis = $( sprintf('<ul id="time-axis">%s</ul>', ticks_html) );
+  $('#spectrum-viewer').append( $time_axis );
+}
+
+
+function clear_spectrum_view( )
+{
+  $( '#spectrum-viewer canvas' ).remove();
+  $( '#spectrum-viewer #time-axis' ).remove();
 }
 
 
