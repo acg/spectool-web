@@ -1,4 +1,4 @@
-all : unpack-examples list-logs
+all : unpack-examples html
 
 
 WEB_SERVER_PORT ?= 9090
@@ -17,15 +17,25 @@ htdocs/data/example/% : htdocs/data/example/%.gz
 	gunzip -c < $< > $@
 
 
-LOG_FILES = $(EXAMPLES) $(shell find -L htdocs/data -type f -a -not -path "htdocs/data/example/*" -a -not -name ".*" -a -not -name list.txt | sort)
+LOG_FILES = $(EXAMPLES) $(shell find -L htdocs/data -type f -a -not -path "htdocs/data/example/*" -a -not -name ".*" | sort)
 
+html : htdocs/index.html
 
-list-logs : htdocs/data/list.txt
+htdocs/index.html : templates/index.html htdocs/logfiles.html
+	@echo "rebuilding page..."
+	@LOGFILES_HTML=`tr -d '\n' < htdocs/logfiles.html` ; sed -e "s|%%LOGFILES_HTML%%|$$LOGFILES_HTML|;" templates/index.html > $@
 
-htdocs/data/list.txt : force $(LOG_FILES)
-	@echo "rebuilding log file list..."
-	@echo $^ | sed -e 's/^force //' | tr ' ' '\n' | sed -e 's@^htdocs/@@' > $@
+htdocs/logfiles.html : force $(LOG_FILES)
+	@echo $^ \
+	| sed -e 's/^force //' \
+	| tr ' ' '\n' \
+	| sed -e 's|^htdocs/||' \
+	| while read f; do \
+	    sed -e "s|%%VALUE%%|$$f|; s|%%TITLE%%|$$f|;" templates/option.html \
+	; done > $@
 
 
 .PHONY : force
+
+.DELETE_ON_ERROR :
 

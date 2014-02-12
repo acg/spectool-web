@@ -24,23 +24,6 @@ $(document).ready( function() {
     });
   } );
 
-  $.ajax({
-    url: 'data/list.txt',
-    type: 'GET',
-    success: function( rsp, textstatus, xhr ) {
-      var logfiles = rsp.trim().split("\n");
-      $( 'option[value!=""]', $dropdown ).remove();
-      _.each( logfiles, function(filename) {
-        $dropdown.append( $( sprintf('<option value="%s">%s</option>', filename, filename) ) );
-      } );
-      if (logfiles.length >= 1) {
-        $dropdown.val(logfiles[0]);
-        $dropdown.trigger('change');
-      }
-      $dropdown.removeAttr('disabled');
-    },
-  });
-
   $frequency_bands.hover(
     function() {
       if ($(this).hasClass('active'))
@@ -73,6 +56,8 @@ $(document).ready( function() {
     $(this).closest('li').toggleClass('active');
     return false;
   } );
+
+  $dropdown.trigger('change');
 
 } );
 
