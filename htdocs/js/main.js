@@ -1,4 +1,5 @@
 var data = [];
+var live_sample_count = 0;
 var z_min = -100;
 var z_max = -50;
 var sx = 8;
@@ -23,17 +24,31 @@ $(document).ready( function() {
     else if (filename == 'ws://')
     {
       data = [];
+      live_sample_count = 0;
       clear_spectrum_view();
 
       refresh_interval = setInterval( function() {
+
+        if (!websocket)
+          return;
+
         clear_spectrum_view();
         render_spectrum_view( data ); 
+
+        $( '.alert' )
+          .addClass( 'alert-info' )
+          .removeClass( 'alert-danger' )
+          .removeClass( 'alert-success' )
+          .html( sprintf('Live view running: %d samples collected.', live_sample_count) );
+
       }, 1000 );
 
       websocket = new WebSocket( websocket_url );
 
       websocket.onmessage = function( msg ) {
-        import_spectrum_data( msg.data );
+        var new_points = import_spectrum_data( msg.data );
+        live_sample_count += new_points.length;
+        data = new_points.concat( data );
         data = data.slice( 0, $viewer.height() / sy );  // throw away oldest samples
       };
 
@@ -42,7 +57,7 @@ $(document).ready( function() {
           .addClass( 'alert-success' )
           .removeClass( 'alert-danger' )
           .removeClass( 'alert-info' )
-          .html( 'connection opened.' );
+          .html( 'Live view connection opened.' );
       };
 
       websocket.onclose = function(ev) {
@@ -56,7 +71,7 @@ $(document).ready( function() {
             .addClass( 'alert-danger' )
             .removeClass( 'alert-success' )
             .removeClass( 'alert-info' )
-            .html( sprintf('connection closed: %s (%d)', ev.reason, ev.code) );
+            .html( sprintf('Live view connection closed: %s (%d)', ev.reason, ev.code) );
         }
       };
     }
@@ -67,20 +82,40 @@ $(document).ready( function() {
         websocket = null;
       }
 
+      $( '.alert' )
+        .removeClass( 'alert-success' )
+        .removeClass( 'alert-danger' )
+        .removeClass( 'alert-info' )
+        .html('');
+
       $.ajax({
         url: filename,
         success: function(rsp) {
+
           $dropdown.attr('disabled','disabled');
           $viewer.addClass('loading');
           data = [];
           clear_spectrum_view();
           $frequency_bands.removeClass('active');
+
+          $( '.alert' )
+            .addClass( 'alert-info' )
+            .html( sprintf("Loading spectrum data from %s ...", filename) );
+
           setTimeout( function() {
-            import_spectrum_data( rsp );
+
+            data = import_spectrum_data( rsp );
             render_spectrum_view( data );
             $viewer.removeClass('loading');
             $dropdown.removeAttr('disabled');
+
+            $( '.alert' )
+              .removeClass( 'alert-info' )
+              .addClass( 'alert-success' )
+              .html( sprintf("Loaded %d spectrum samples.", data.length) );
+
           }, 100 );
+
         }
       });
     }
@@ -123,6 +158,8 @@ $(document).ready( function() {
 
 function import_spectrum_data( spectool_raw_lines )
 {
+  var points = [];
+
   _.each( spectool_raw_lines.split("\n"), function(line,linenum) {
 
     var fields = line.split(": ");
@@ -146,9 +183,11 @@ function import_spectrum_data( spectool_raw_lines )
       return z_norm;
     } );
 
-    data.unshift( [ t, samples ] );
+    points.unshift( [ t, samples ] );
 
   } );
+
+  return points;
 }
 
 

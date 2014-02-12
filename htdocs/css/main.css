@@ -1,14 +1,21 @@
 body.spectool-web {
-  padding-top: 50px;
+  padding-top: 125px;
 }
 
 .spectool-web #spectrum-viewer,
-.spectool-web form,
-.spectool-web #frequency-axis {
+.spectool-web #frequency-axis,
+.spectool-web .alert {
   position: relative;
   width: 740px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.spectool-web .alert {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  margin-left: -370px;
 }
 
 .spectool-web #spectrum-viewer {
@@ -23,15 +30,6 @@ body.spectool-web {
   width: 664px;
   height: 100%;
   background-color: #000044;
-}
-
-.spectool-web form {
-  margin-top: 25px;
-  margin-bottom: 25px;
-}
-
-.spectool-web form label[for="logfile"] {
-  text-align: left;
 }
 
 .spectool-web #spectrum-viewer.loading {
