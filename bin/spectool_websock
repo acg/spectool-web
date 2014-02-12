@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# Adapted from https://gist.github.com/apk/2414478 by alangrow+nospam@gmail.com
+# Requires bash 4.x, openssl.
+# Original author: rootshell@corelogics.de
+ 
+until read line; line=`tr -d '\r\n'<<<$line`; test -z "$line"; do
+  test "${line:0:18}" = "Sec-WebSocket-Key:" && key=${line:19}
+  test "${line:0:22}" = "Sec-WebSocket-Version:" && ver=$line
+done
+rkey=`printf "%s" "${key}258EAFA5-E914-47DA-95CA-C5AB0DC85B11" | openssl dgst -sha1 -binary | openssl base64`
+printf "HTTP/1.1 101 Switching Protocols\r\n"
+printf "Upgrade: websocket\r\nConnection: Upgrade\r\n"
+printf "Sec-WebSocket-Accept: $rkey\r\n$ver\r\n\r\n"
+
+spectool_raw | tai64n | while read line; do
+  while [ "${#line}" -gt 0 ]; do
+    l2=${line:0:65535}
+    if [ "${#l2}" -lt 126 ]; then
+      xlen=`printf '%02x' ${#l2}`
+      format="\x81\x${xlen}%s"
+    else
+      xlen=`printf '%04x' ${#l2}`
+      format="\x81\x7e\x${xlen:0:2}\x${xlen:2}%s"
+    fi
+    printf "$format" "$l2"
+    line=${line:65535}
+  done
+done
+
+exit 0
+
