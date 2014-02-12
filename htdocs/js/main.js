@@ -146,14 +146,15 @@ function render_spectrum_view( spectool_raw_lines )
   {
     var interval = 25;
     var tick_points = _.filter( data, function(point,y) { return (0 == y % interval) } );
-    var ticks = _.map( tick_points, function(point,y) {
+    var tick_height = data.length * sy / tick_points.length;
+    var ticks_html = (_.map( tick_points, function(point) {
       var d = new Date( point[0] * 1000 );
-      var hh = d.getHours(), mm = d.getMinutes(), ss = d.getSeconds();
-      return hh+":"+mm+":"+ss;
-    } );
+      var hh = d.getHours();
+      var mm = d.getMinutes();
+      var ss = d.getSeconds();
+      return sprintf( '<li style="height:%dpx">%02d:%02d:%02d</li>', tick_height, hh, mm, ss );
+    } )).join("");
 
-    var tick_height = data.length * sy / ticks.length;
-    var ticks_html = (_.map( ticks, function(t) { return '<li style="height:'+tick_height+'px">'+t+'</li>' } )).join("");
     var $time_axis = $( '<ul id="time-axis">'+ticks_html+'</ul>' );
 
     $('#spectrum-viewer').append( $time_axis );
