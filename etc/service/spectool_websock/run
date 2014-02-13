@@ -1,0 +1,5 @@
+#!/bin/sh
+exec 2>&1
+cd ../../../htdocs
+. ../etc/main.conf
+exec tcpserver -v 127.0.0.1 "$WEBSOCKET_SERVER_PORT" ../bin/spectool_websock

@@ -1,0 +1,6 @@
+#!/bin/sh
+exec 2>&1
+cd ../../../htdocs
+. ../etc/main.conf
+printf "Please visit http://127.0.0.1:%d/\n" "$WEB_SERVER_PORT"
+exec python -m SimpleHTTPServer "$WEB_SERVER_PORT"
