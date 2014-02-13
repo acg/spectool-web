@@ -1,11 +1,10 @@
 all : unpack-examples html
 
+serve-static :
+	( cd etc/service/httpd && ./run )
 
-WEB_SERVER_PORT ?= 9090
-
-serve :
-	@printf "Please visit http://127.0.0.1:%d/\n" "$(WEB_SERVER_PORT)"
-	@( cd htdocs ; python -m SimpleHTTPServer $(WEB_SERVER_PORT) )
+serve-full :
+	( cd etc/service && svscan . )
 
 
 EXAMPLES_GZ = $(shell find htdocs/data/example -name \*.gz | sort)
