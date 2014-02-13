@@ -2,7 +2,6 @@ var data = [];
 var live_sample_count = 0;
 var z_min = -100;
 var z_max = -50;
-var sx = 8;
 var sy = 2;
 var websocket_url = sprintf("ws://%s:%d/", location.hostname, (parseInt(location.port)+1));
 var websocket = null;
@@ -46,7 +45,7 @@ $(document).ready( function() {
       websocket.onmessage = function( msg ) {
         var new_points = import_spectrum_data( msg.data );
         live_sample_count += new_points.length;
-        data = new_points.concat( data );
+        data = [].concat( new_points, data );
         data = data.slice( 0, $viewer.height() / sy );  // throw away oldest samples
       };
 
@@ -164,14 +163,33 @@ function import_spectrum_data( spectool_raw_lines )
 
     var t = linenum;
 
+    // Parse a TAI64N timestamp if it prefixes the line.
+
     if (fields[0].charAt(0) == '@')
       t = parse_tai64n( fields[0].split(" ")[0].substr(1) );
+
+    // Normalize and clamp the dBm samples into the range [0,1].
 
     var samples = _.map( Z, function(z) {
       z = Math.min( z_max-1, Math.max( z_min, parseInt(z) ) );
       var z_norm = (z - z_min) / (z_max - z_min);
       return z_norm;
     } );
+
+    // The viewport is fixed at 838px wide.
+    // Stretch the samples here. Avoid subsampling.
+
+    if (samples.length == 83)        // Original WiSPY
+    {
+      var z0 = samples[0];
+      var zn = samples[samples.length-1];
+      samples = _.flatten( _.map( samples, function(z) { return [z,z,z,z,z,z,z,z,z,z] } ), true );
+      samples = [].concat( [z0,z0,z0,z0], samples, [zn,zn,zn,zn] );
+    }
+    else if (samples.length == 419)  // WiSPY 24x2
+    {
+      samples = _.flatten( _.map( samples, function(x) { return [x,x] } ), true );
+    }
 
     points.unshift( [ t, samples ] );
 
@@ -186,7 +204,7 @@ function render_spectrum_view( data )
   if (!data.length)
     return;
 
-  var cx = data[0][1].length * sx;
+  var cx = data[0][1].length;
   var cy = data.length * sy;
 
   var $canvas = $( sprintf('<canvas width="%d" height="%d"></canvas>', cx, cy) );
@@ -199,12 +217,10 @@ function render_spectrum_view( data )
     _.each( _.range(sy), function() {
       _.each( point[1], function(z,x) {
         var rgb = colors[ Math.floor( z * (colors.length-1)) ];
-        _.each( _.range(sx), function() {
-          img.data[p++] = rgb[0];
-          img.data[p++] = rgb[1];
-          img.data[p++] = rgb[2];
-          img.data[p++] = 255;
-        } );
+        img.data[p++] = rgb[0];
+        img.data[p++] = rgb[1];
+        img.data[p++] = rgb[2];
+        img.data[p++] = 255;
       } );
     } );
   } );

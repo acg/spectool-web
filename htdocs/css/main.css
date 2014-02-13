@@ -5,17 +5,17 @@ body.spectool-web {
 .spectool-web #spectrum-viewer,
 .spectool-web #frequency-axis {
   position: relative;
-  width: 740px;
+  width: 914px;
   margin-left: auto;
   margin-right: auto;
 }
 
 .spectool-web .alert {
   position: absolute;
-  width: 664px;
+  width: 838px;
   top: 60px;
   left: 50%;
-  margin-left: -309px;
+  margin-left: -396px;
 }
 
 .spectool-web .navbar .source-label {
@@ -31,7 +31,7 @@ body.spectool-web {
   position: relative;
   top: 0;
   left: 61px;
-  width: 664px;
+  width: 838px;
   height: 100%;
   background-color: #000044;
 }
@@ -79,16 +79,16 @@ body.spectool-web {
 }
 
 .spectool-web #frequency-axis ul li:nth-child(2n) {
-  width: 40px;
+  width: 50px;
 }
 .spectool-web #frequency-axis ul li:nth-child(2n+1) {
-  width: 39px;
+  width: 50px;
 }
 .spectool-web #frequency-axis ul li:first-child {
-  width: 75px;
+  width: 94px;
 }
 .spectool-web #frequency-axis ul li:nth-child(15) {
-  width: 75px;
+  width: 94px;
 }
 
 
