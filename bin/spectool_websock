@@ -13,7 +13,7 @@ printf "HTTP/1.1 101 Switching Protocols\r\n"
 printf "Upgrade: websocket\r\nConnection: Upgrade\r\n"
 printf "Sec-WebSocket-Accept: $rkey\r\n$ver\r\n\r\n"
 
-spectool_raw | tai64n | while read line; do
+[ -z "$SPECTOOL_NET_SERVER" ] && spectool_raw || spectool_raw --tcp "$SPECTOOL_NET_SERVER" | tai64n | while read line; do
   while [ "${#line}" -gt 0 ]; do
     l2=${line:0:65535}
     if [ "${#l2}" -lt 126 ]; then
